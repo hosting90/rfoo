@@ -444,14 +444,19 @@ def run_in_thread(foo):
 class Server(object):
     """Serve calls over connection."""
 
-    def __init__(self, handler_type, handler_context=None, conn=None, ssl_context=None, timeout=None):
+    def __init__(self, handler_type, handler_context=None, conn=None, ssl_context=None, timeout=None, listen_backlog=None):
         self._handler_context = handler_context
         self._handler_type = handler_type
         self._conn = conn
         self._ssl_context = ssl_context
         self._timeout = timeout
         self._stop = threading.Event()
-
+        if listen_backlog is None:
+            self._listen_backlog = 5
+        else:
+            if not isinstance(listen_backlog, int) or listen_backlog <= 0:
+                raise ValueError("Listen backlog must be positive integer value")
+            self._listen_backlog = listen_backlog
     def stop(self):
         self._stop.set()
 
@@ -474,7 +479,7 @@ class Server(object):
         logging.info('Enter.')
 
         try:
-            self._conn.listen(5)
+            self._conn.listen(self._listen_backlog)
 
             while True:
                 if self.stopped():
