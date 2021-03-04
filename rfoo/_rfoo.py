@@ -566,11 +566,11 @@ class Server(object):
 class InetServer(Server):
     """Serve calls over INET sockets."""
     
-    def __init__(self, handler_type, handler_context=None, timeout=None):
+    def __init__(self, handler_type, handler_context=None, timeout=None, listen_backlog=None):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.settimeout(None)
-        Server.__init__(self, handler_type, handler_context, s, None, timeout)
+        Server.__init__(self, handler_type, handler_context, s, None, timeout, listen_backlog=listen_backlog)
 
     def start(self, host=LOOPBACK, port=DEFAULT_PORT):
         self._conn.bind((host, port))
@@ -581,7 +581,7 @@ class InetServer(Server):
 class SSLServer(Server):
     """Serve calls over SSL wrapped INET sockets."""
 
-    def __init__(self, handler_type, handler_context=None, ssl_context=None,certfile=None,keyfile=None, timeout=None):
+    def __init__(self, handler_type, handler_context=None, ssl_context=None,certfile=None,keyfile=None, timeout=None, listen_backlog=None, listen_backlog=listen_backlog):
         import ssl
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -600,10 +600,10 @@ class SSLServer(Server):
 class UnixServer(Server):
     """Serve calls over Unix sockets."""
     
-    def __init__(self, handler_type, handler_context=None):
+    def __init__(self, handler_type, handler_context=None, listen_backlog=None):
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.settimeout(None)
-        Server.__init__(self, handler_type, handler_context, s)
+        Server.__init__(self, handler_type, handler_context, s, listen_backlog=listen_backlog)
 
     def start(self, path):
         self._conn.bind(path)
