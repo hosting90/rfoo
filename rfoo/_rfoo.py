@@ -581,7 +581,7 @@ class InetServer(Server):
 class SSLServer(Server):
     """Serve calls over SSL wrapped INET sockets."""
 
-    def __init__(self, handler_type, handler_context=None, ssl_context=None,certfile=None,keyfile=None, timeout=None, listen_backlog=None, listen_backlog=listen_backlog):
+    def __init__(self, handler_type, handler_context=None, ssl_context=None,certfile=None,keyfile=None, timeout=None, listen_backlog=listen_backlog):
         import ssl
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
