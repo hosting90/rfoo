@@ -581,7 +581,7 @@ class InetServer(Server):
 class SSLServer(Server):
     """Serve calls over SSL wrapped INET sockets."""
 
-    def __init__(self, handler_type, handler_context=None, ssl_context=None,certfile=None,keyfile=None, timeout=None, listen_backlog=listen_backlog):
+    def __init__(self, handler_type, handler_context=None, ssl_context=None,certfile=None,keyfile=None, timeout=None, listen_backlog=None):
         import ssl
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -589,7 +589,7 @@ class SSLServer(Server):
         if ssl_context == None and certfile != None and keyfile != None:
             context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
             context.load_cert_chain(certfile=certfile, keyfile=keyfile)
-        Server.__init__(self, handler_type, handler_context, s, ssl_context, timeout)
+        Server.__init__(self, handler_type, handler_context, s, ssl_context, timeout, listen_backlog=listen_backlog)
 
     def start(self, host=LOOPBACK, port=DEFAULT_PORT):
         self._conn.bind((host, port))
