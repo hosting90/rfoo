@@ -345,9 +345,14 @@ class PipeSocket(object):
 
 class PipeConnection(Connection):
     """Connection type for pipes."""
+    def __init__(self):
+        # do nothing here. We don't have the socket object yet
+        pass
 
     def connect(self, pipe_socket):
-        self._conn = pipe_socket
+        # initialize parent with pipe socket
+        # and connect
+        Connection.__init__(self, pipe_socket)
         self._conn.connect()
         return self
 
